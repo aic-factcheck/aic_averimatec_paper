@@ -5,7 +5,7 @@
 \documentclass[11pt]{article}
 
 % Remove the "review" option to generate the final version.
-\usepackage[review]{EMNLP2023}
+\usepackage{EMNLP2023}
 
 % Standard package includes
 \usepackage{times}
@@ -93,9 +93,9 @@ Prague, Czech Republic\\
 \texttt{drchajan@fel.cvut.cz} \\}
 
 \begin{document}
-{\makeatletter\acl@finalcopytrue
+%{\makeatletter\acl@finalcopytrue
   \maketitle
-}
+%}
 \begin{abstract}
 In this paper, we present our fact verification pipeline which has scored first in \averitec{} shared task in real-world automated fact-checking. Our system is a simple two-step RAG pipeline based on our last year's submission. We show how the pipeline can be redeployed on-premise, achieving state-of-the-art fact-checking performance (in sense of \evr{} test-score), even under the constraint of a single Nvidia A10 GPU, 23GB of graphical memory and 60s running time per claim.
 
@@ -138,3 +138,4 @@ The access to the computational infrastructure of the OP VVV funded project CZ.0
 %\include{src/appendix_c_errors}
 
 \end{document}
+
