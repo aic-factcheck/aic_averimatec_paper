@@ -21,7 +21,7 @@
 }
 \begin{figure*}
     \section{System prompt}
-    \label{appendix_sec:system_prompt}
+    \label{appendix_sec:system2025_prompt}
     \begin{lstlisting}[breaklines=true, language={}, frame=single, caption={System prompt for the LLMs, \averitec{} claim is to be entered into the user prompt. Three dots represent omitted repeating parts of the prompt. Reused and reprinted from~\citealt{ullrich-etal-2024-aic}.}, label={lst:llm_system_prompt}]
 You are a professional fact checker, formulate up to 10 questions that cover all the facts needed to validate whether the factual statement (in User message) is true, false, uncertain or a matter of opinion. Each question has one of four answer types: Boolean, Extractive, Abstractive and Unanswerable using the provided sources.
 After formulating Your questions and their answers using the provided sources, You evaluate the possible veracity verdicts (Supported claim, Refuted claim, Not enough evidence, or Conflicting evidence/Cherrypicking) given your claim and evidence on a Likert scale (1 - Strongly disagree, 2 - Disagree, 3 - Neutral, 4 - Agree, 5 - Strongly agree). Ultimately, you note the single likeliest veracity verdict according to your best knowledge.

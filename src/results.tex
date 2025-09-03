@@ -1,7 +1,6 @@
 %!TEX ROOT=../emnlp2023.tex
 
 \section{Results and analysis}
-\label{sec:results}
 \label{nothink}
 
 
@@ -34,13 +33,13 @@
 \end{table}
 
 In Table~\ref{tab:leaderboard}, we reprint the final test-leaderboard of \averitec{} shared task as provided by the organizers.
-Our system introduced in Section~\ref{sec:system} scores first in the decisive metric for the task -- the new AVeriTeC score -- with a significant margin.
+Our system introduced in Section~\ref{sec:system2025} scores first in the decisive metric for the task -- the new AVeriTeC score -- with a significant margin.
 This came as a surprise to its authors, as neither the values of the old, hu-METEOR-based AVeriTeC score~\cite{averitec2024}, nor the dev-leaderboard available during system development phase (where our system scored 4th), suggested its supremacy.
 Let us therefore proceed with a discussion of possible strengths that could have given our system an edge in verifying the \averitec{} test-set of previously unseen 1000 claims.
 
 \subsection{Why does the system perform well?}
 \label{sec:why}
-So why should our system outperform the \averitec{} baseline and even the other systems submitted to \averitec{} shared task despite the simplicity of its design (Figure~\ref{fig:pipeline}) which boils down to a straightforward case of retrieval-augmented generation (RAG)?
+So why should our system outperform the \averitec{} baseline and even the other systems submitted to \averitec{} shared task despite the simplicity of its design (Figure~\ref{fig:pipeline2025}) which boils down to a straightforward case of retrieval-augmented generation (RAG)?
 
 The main reason, in our experience, is the large \textbf{context size} we opt for -- while even the \averitec{} baseline processes the claims and sources in a manner more sophisticated than we do, it processes the knowledge store on a \textit{sentence} level, reducing the amount of information passed to the LLM as opposed to working with \textit{documents} as a whole, which is the strategy our system approximates.
 
@@ -77,7 +76,7 @@ qwen3:14B\textsubscript{\texttt{/no\_think}}     & 0.29 & 0.59 & 0.41 \\
 qwen3:14B\textsubscript{\texttt{/think}}        & 0.20 & 0.59 & 0.42 \\
 \hline
 \end{tabular}
-\caption{Ablation study on LLM choice and \texttt{<think>}-tokens impact on \averitec{} dev-score. Pipeline design (Figure~\ref{fig:pipeline}), retrieval results, system and user prompts are fixed. Evaluated using an on-premise~\evr{} scorer with Ollama-hosted Llama3.3-70B as a judge.}
+\caption{Ablation study on LLM choice and \texttt{<think>}-tokens impact on \averitec{} dev-score. Pipeline design (Figure~\ref{fig:pipeline2025}), retrieval results, system and user prompts are fixed. Evaluated using an on-premise~\evr{} scorer with Ollama-hosted Llama3.3-70B as a judge.}
 \label{tab:ablation}
 \end{table}
 
