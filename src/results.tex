@@ -10,36 +10,35 @@
 >{\centering\arraybackslash}p{.7cm} 
 >{\centering\arraybackslash}p{.7cm} 
 >{\centering\arraybackslash}p{.7cm} 
->{\centering\arraybackslash}p{.7cm} 
 >{\centering\arraybackslash}p{.7cm}}
 {\small{\textbf{System}}} &
-\rotatebox{70}{\textbf{\footnotesize{old AVeriTeC score}}} &
-\rotatebox{70}{\textbf{Q only} {\footnotesize{(\evr)}}} &
-\rotatebox{70}{\textbf{Q + A} {\footnotesize{(\evr)}}} &
-\rotatebox{70}{\textbf{\footnotesize{new AVeriTeC score}}} &
-\rotatebox{70}{{\footnotesize{\textbf{time per claim}}}} \\
+\rotatebox{70}{\textbf{\footnotesize{Question Score}}} &
+\rotatebox{70}{\textbf{\footnotesize{Evidence Score}}} &
+\rotatebox{70}{\textbf{\footnotesize{Verdict Accuracy}}} &
+\rotatebox{70}{\textbf{\footnotesize{Justification Score}}} \\
 \hline
-{\small{AIC CTU}}       & 0.41 & 0.20 & \textbf{0.48} & \textbf{0.33} & 54\textit{s} \\
-{\small{HUMANE}}        & 0.45 & 0.19 & 0.43 & 0.27 & 29\textit{s} \\
-{\small{yellow flash}}  & 0.16 & 0.16 & 0.41 & 0.25 & 32\textit{s} \\
-{\small{FZIGOT}}        & 0.46 & \textbf{0.36} & 0.40 & 0.24 & 19\textit{s} \\
-{\small{EFC}}           & 0.49 & 0.13 & 0.35 & 0.20 & \textbf{~7\textit{s}} \\
-{\small{checkmate}}     & 0.38 & 0.18 & 0.34 & 0.20 & 22\textit{s} \\
+{\small{HUMANE}}        & {0.89} & {0.54} & {0.55} & {0.56} \\
+{\small{ADA-AGGR}}      & 0.37 & 0.46 & 0.54 & 0.43 \\
+{\small{AIC CTU (ours)} }       & 0.81 & 0.33 & 0.35 & 0.30 \\
+{\small{XxP}}           & 0.39 & 0.27 & 0.26 & 0.20 \\
+{\small{teamName}}      & 0.66 & 0.23 & 0.26 & 0.22 \\
+{\small{REVEAL}}        & 0.63 & 0.28 & 0.24 & 0.13 \\
+{\small{fv}}            & 0.29 & 0.16 & 0.16 & 0.13 \\
 \hline
-{\small{Baseline}}      & \textbf{0.50} & 0.27 & 0.34 & 0.20 & 34\textit{s} \\
+{\small{Baseline}}      & 0.55 & 0.17 & 0.11 & 0.13 \\
 \end{tabular}
-\caption{\averitec{} shared task system leaderboard as shared by organizers, listing new \evr{}-recall-based~\cite{akhtar2024ev2r} and legacy hu-METEOR AVeriTeC scores. Evaluated using AVeriTeC 2025 test set. Best scores are bold.}
+\caption{System leaderboard showing performance metrics. Best scores are bold.}
 \label{tab:leaderboard}
 \end{table}
 
 In Table~\ref{tab:leaderboard}, we reprint the final test-leaderboard of \averitec{} shared task as provided by the organizers.
-Our system introduced in Section~\ref{sec:system2025} scores first in the decisive metric for the task -- the new AVeriTeC score -- with a significant margin.
+Our system introduced in Section~\ref{sec:system2026} scores first in the decisive metric for the task -- the new AVeriTeC score -- with a significant margin.
 This came as a surprise to its authors, as neither the values of the old, hu-METEOR-based AVeriTeC score~\cite{averitec2024}, nor the dev-leaderboard available during system development phase (where our system scored 4th), suggested its supremacy.
 Let us therefore proceed with a discussion of possible strengths that could have given our system an edge in verifying the \averitec{} test-set of previously unseen 1000 claims.
 
 \subsection{Why does the system perform well?}
 \label{sec:why}
-So why should our system outperform the \averitec{} baseline and even the other systems submitted to \averitec{} shared task despite the simplicity of its design (Figure~\ref{fig:pipeline2025}) which boils down to a straightforward case of retrieval-augmented generation (RAG)?
+So why should our system outperform the \averitec{} baseline and even the other systems submitted to \averitec{} shared task despite the simplicity of its design (Figure~\ref{fig:pipeline2026}) which boils down to a straightforward case of retrieval-augmented generation (RAG)?
 
 The main reason, in our experience, is the large \textbf{context size} we opt for -- while even the \averitec{} baseline processes the claims and sources in a manner more sophisticated than we do, it processes the knowledge store on a \textit{sentence} level, reducing the amount of information passed to the LLM as opposed to working with \textit{documents} as a whole, which is the strategy our system approximates.
 
@@ -56,35 +55,3 @@ The old scoring method was, for example, found to be prone to some level of nois
 
 The discrepancy between old and new AVeriTeC score in Table~\ref{tab:leaderboard} could motivate a further study on how the new score behaves, for example using the test-prediction files from last year AVeriTeC shared task systems.
 The familiarity of the systems, the availability of their hu-METEOR scores and documentation, may reveal valuable insights into the \evr{} evaluation method itself, as in which behaviours does it punish and reward.
-
-\subsection{LLM impact}
-\label{llmimp}
-\begin{table}[h]
-\centering
-\begin{tabular}{l
->{\centering\arraybackslash}p{1cm} 
->{\centering\arraybackslash}p{1cm} 
->{\centering\arraybackslash}p{1cm}}
-\textbf{LLM} &
-\rotatebox{70}{\textbf{Q only} {\footnotesize{(\evr)}}} &
-\rotatebox{70}{\textbf{Q + A} {\footnotesize{(\evr)}}} &
-\rotatebox{70}{\textbf{\footnotesize{new AVeriTeC score}}} \\
-\hline
-GPT-4o\textsubscript{\texttt{2024-05-13}}      & 0.30 & 0.58 & 0.40 \\
-Llama3.1-70B& 0.37 & 0.54 & 0.39 \\
-qwen3:14B\textsubscript{\texttt{/no\_think}}     & 0.29 & 0.59 & 0.41 \\
-qwen3:14B\textsubscript{\texttt{/think}}        & 0.20 & 0.59 & 0.42 \\
-\hline
-\end{tabular}
-\caption{Ablation study on LLM choice and \texttt{<think>}-tokens impact on \averitec{} dev-score. Pipeline design (Figure~\ref{fig:pipeline2025}), retrieval results, system and user prompts are fixed. Evaluated using an on-premise~\evr{} scorer with Ollama-hosted Llama3.3-70B as a judge.}
-\label{tab:ablation}
-\end{table}
-
-In 2024, we have experimented with then available versions of GPT-4o and Llama3.1-70B and found the open-source Llama to perform encouragingly well, depite the still-quite-cumbersome model size and the need for its quantization~\cite{ullrich-etal-2024-aic}.
-This year, we have simply gone for the most recent open-weights LLM at the largest parameter count we could fit within our \averitec{} compute budget, thus choosing the Qwen3 at its 14B parameter size~\cite{yang2025qwen3technicalreport}.
-
-Qwen3 was trained to produce thinking tokens by default, an approach popularized by DeepSeek~\cite{deepseekai2025deepseekr1incentivizingreasoningcapability} and OpenAI research models, to force the chain of thought.
-We have experimented with enabling and disabling this feature to see if it has an impact on the AVeriTeC score, and compared the model output quality to our last year prediction dumps, with evaluation experiments listed in Table~\ref{tab:ablation}.
-
-Both Qwen3 evidence and label generation settings perform on par with previous GPT-4o generation, which validates our model choice.
-The thinking tokens, while producing legitimate-looking writeups of the fact-checking workflows (see Appendix~\ref{appendix_sec:think}) were not shown to stimulate an improvement in AVeriTeC score in the ablation study (Table~\ref{tab:ablation}), so we suggest to disable this feature in future reproductions in favour of a faster prediction time (54s in the Table~\ref{tab:leaderboard} was produced with the thinking feature \textit{enabled}, so disabling it might solve the issue with near-limit runtime our pipeline suffers from). 

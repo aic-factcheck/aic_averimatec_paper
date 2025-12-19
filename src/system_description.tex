@@ -1,11 +1,11 @@
 %!TEX ROOT=../emnlp2023.tex
 
 \section{System description}
-\label{sec:system2025}
+\label{sec:system2026}
 
-Our system is a straightforward adaptation of the AIC CTU Averitec system designed one year prior, published in~\citealt{ullrich-etal-2024-aic}.
+We adapted a system from~\citealt{ullrich-etal-2024-aic} which extends on top of~\citealt{ullrich-etal-2024-aic}.
 The cited paper describes the system in detail, with ablation studies and justifications of each step.
-Our pipeline, depicted in Figure~\ref{fig:pipeline2025}, consists of precomputation, retrieval, and generation modules:
+Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, consists of precomputation, retrieval, and generation modules:
 
 \begin{enumerate}[label=\roman*.]  % First-level: i., ii., iii.
 \item Precomputation module
@@ -23,7 +23,7 @@ Our pipeline, depicted in Figure~\ref{fig:pipeline2025}, consists of precomputat
 \end{enumerate}
 \item Evidence \& label generation module
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
-    \item We instruct a Large Language Model (LLM) to produce Question-Answer pairs required to fact-check given claim based on the provided sources, and predict its veracity verdict in a single output. We pass it the texts of all $l$ sources, and several few-shot QA-pair generation examples picked from Averitec train set retrieved using BM25 based on the tested claim. The whole instruction is serialized into a system prompt and the format we used can be seen in Appendix~\ref{appendix_sec:system2025_prompt}.
+    \item We instruct a Large Language Model (LLM) to produce Question-Answer pairs required to fact-check given claim based on the provided sources, and predict its veracity verdict in a single output. We pass it the texts of all $l$ sources, and several few-shot QA-pair generation examples picked from Averitec train set retrieved using BM25 based on the tested claim. The whole instruction is serialized into a system prompt and the format we used can be seen in Appendix~\ref{appendix_sec:system2026_prompt}.
     \item \textbf{Claim} is then passed to the LLM as a user message.
     \item LLM is called to \textbf{generate the evidence} as a Question-Answer-Source triples and the Likert-scale scores for each possible \textbf{veracity verdict} in a single prediction, performing a chain of thought. 
     \item The LLM output is parsed, and the verdict with the highest score is chosen for the claim.
@@ -33,7 +33,7 @@ Our pipeline, depicted in Figure~\ref{fig:pipeline2025}, consists of precomputat
 The main differences between this year's AIC \averitec{} system, opposed to last year's AIC AVeriTeC system, are the omission of knowledge store pruning in the precomputation step\footnote{The precomputed vector stores were required to be independent on claim text in \averitec{}.}, and, importantly, the choice of LLM.
 \subsection{Model and parameter choices}
 \label{sec:choices}
-To produce our submission in the \averitec{} shared task, the following choices were made to deploy the pipeline from section~\ref{sec:system2025}:
+To produce our submission in the \averitec{} shared task, the following choices were made to deploy the pipeline from section~\ref{sec:system2026}:
 
 \texttt{mxbai-embed-large-v1}~\cite{li-li-2024-aoe,emb2024mxbai} is used for the vector embeddings, and the maximum chunk size is set to 2048 characters, considering its input size of 512 tokens and a rule-of-thumb coefficient of 4 characters per token to exploit the full embedding input size and produce the smallest possible vector store size without neglecting a significant proportion of knowledge store text.
 

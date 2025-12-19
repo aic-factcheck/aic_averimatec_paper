@@ -63,7 +63,7 @@
 %
 % and set <dim> to something 5cm or larger.
 
-\title{AIC CTU@FEVER 8: On-premise fact checking through long context RAG}
+\title{AIC CTU@AVerImaTeC: RAG baseline for image-text fact checking}
 
 % Author information can be set in various styles:
 % For several authors from the same institution:
@@ -97,7 +97,7 @@ Prague, Czech Republic\\
   \maketitle
 %}
 \begin{abstract}
-In this paper, we present our fact verification pipeline which has scored first in \averitec{} shared task in real-world automated fact-checking. Our system is a simple two-step RAG pipeline based on our last year's submission. We show how the pipeline can be redeployed on-premise, achieving state-of-the-art fact-checking performance (in sense of \evr{} test-score), even under the constraint of a single Nvidia A10 GPU, 23GB of graphical memory and 60s running time per claim.
+In this paper, we present our 3rd place system in the AVerImaTeC shared task, which combines our last year's RAG pipeline with a simple 
 
 \end{abstract}
 
@@ -116,7 +116,7 @@ In this paper, we present our fact verification pipeline which has scored first 
 Our pipeline is not meant to be relied upon nor to replace a human fact-checker, but rather to assist an informed user. It gives sources and proposed labels for further questioning. It is optimized only for English, the carbon costs of the used models are considerable, despite the system trying to cut down the environmental cost of the prediction step.
 
 \section*{Ethics statement}
-Our pipeline is an extension of our already existing last year submission all original authors agreed with, including the reusal of the necessary listing in Appendix~\ref{appendix_sec:system2025_prompt}.
+Our pipeline is an extension of our already existing last year submission all original authors agreed with, including the reusal of the necessary listing in Appendix~\ref{appendix_sec:system2026_prompt}.
 The system was build specifically for the~\averitec~shared task and reflects the biases of its annotators, for more information on this, we suggest the original AVeriTeC paper~\cite{averitec2024}.
 \section*{Acknowledgements}
 We would like to thank our last year system coauthor Tomáš Mlynář for staying in the loop, providing timely insights, proofreads and experience even when direct participation was not within his time budget this year.
@@ -133,7 +133,7 @@ The access to the computational infrastructure of the OP VVV funded project CZ.0
 \appendix
 
 \include{src/appendix_a_llms}
-\include{src/appendix_b_think}
+%\include{src/appendix_b_think}
 %\include{src/appendix_b_opensource}
 %\include{src/appendix_c_errors}
 
