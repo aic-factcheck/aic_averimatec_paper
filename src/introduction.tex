@@ -4,9 +4,11 @@
 
 
 \section{Introduction}
-TODO: averitec 2024 proved that factchecking can be done on long text with proprietary blackbox llms averitec 2 2025 showed that it can also be solved using open-weights models on reasonable resources, this year's AVerImaTeC shared task~\cite{cao2025averimatecdatasetautomaticverification} extends the challenge to its multimodal settings, providing .
+The challenge of automated fact verification has been studied extensively in previous works~\cite{10.1162/tacl_a_00454,akhtar-etal-2025-2nd,schlichtkrull-etal-2024-automated}, most commonly modelled as an NLP task with textual inputs.
+With public discourse moving increasingly to social media, the task fact-checkers face, however, often goes beyond just text and language.
+An important example of this phenomenon are the image-text claims, whose veracity depends not only on the textual statement itself, but also on the contents of images that come with it, whether they are authentic or edited, and whether the images are presented in the right context.
 
-We have scored 3rd place with a simple pipeline that performs RAG with two retrieval modules, one retrieving offline knowledge store evidence based on textual similarity, other retrieving texts published alongside a similar image using a blackbox reverse image search model -- Google Lens, in our case.
+To facilitate the automation of this type of fact-checking~\citealt{cao2025averimatecdatasetautomaticverification} publishes \averitec{} dataset, collecting hundreds of reference image-text factchecks from human annotators, announcing the \averitec{} shared task to establish its state of the art.
 
 %\vspace{-.5em}
 \begin{minipage}{\linewidth}
@@ -18,3 +20,7 @@ We have scored 3rd place with a simple pipeline that performs RAG with two retri
 \vspace{1em}
 \end{minipage}
 
+
+With this paper, we introduce our 3rd place \averitec{} shared-task system which aims to give a strong baseline for image-text fact checking using easy-to-reproduce modules and affordable running costs, using a single query to multimodal LLM per claim and a single RIS request for each image attached to it.
+Our pipeline performs RAG with two retrieval modules, one retrieving relevant documents from offline knowledge using vector search, other retrieving documents that better contextualize the claim images using RIS -- Google Lens, in our case.
+Our system is visualised in figure~\ref{fig:pipeline2026} and detailed in section~\ref{sec:system2026}.

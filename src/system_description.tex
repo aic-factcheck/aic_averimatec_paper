@@ -10,7 +10,7 @@ Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, is a RAG scheme of two 
 \begin{enumerate}[label=\roman*.]  % First-level: i., ii., iii.
 \item \textbf{Text-based retrieval module}
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
-    \item \textbf{Vector store} is produced for each of the \averitec{} datapoints in advance, using the scheme introduced in~\citealt{ullrich-etal-2024-aic}: the provided text-only \averitec{} knowledge store is chunked into 2048 character segments, and each is embedded using the \texttt{mxbai-embed-large-v1}~\cite{li-li-2024-aoe,emb2024mxbai} model.
+    \item \textbf{Vector store} is produced for each of the \averitec{} datapoints in advance, using the scheme introduced in~\citealt{ullrich-etal-2024-aic}: the provided text-only \averitec{} knowledge store is chunked into 2048-character segments\footnote{The chunks do not overlap, and are annotated with context before and after in their metadata, as described in more detail in~\citealt{ullrich-etal-2024-aic}.}, and each is embedded using the \texttt{mxbai-embed-large-v1}~\cite{li-li-2024-aoe,emb2024mxbai} model.
     \item \textbf{Similarity search} is performed using the exact $k$-NN search implementation provided by the \texttt{FAISS}~\cite{douze2024faiss,johnson2019billion} library, with $k=20$ nearest neighbours
     \item \textbf{Maximal marginal relevance}~\cite{carbonell-mmr} reranking down to $l=7$ results is then applied to diversify the search results. We set the tradeoff between result diversity and similarity to the claim to $\lambda=0.8$ in favour of similarity to the claim.
 \end{enumerate}
@@ -22,7 +22,7 @@ Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, is a RAG scheme of two 
     
     Importantly, many results of RIS we performed in ii.1 were scraping-protected, most notably the Facebook and Instagram posts, resulting in an empty result. For simplicity and compliance with fair data usage, we toss these results as well, although we acknowledge that this might lead to a loss of useful information.
 
-    Finally, to be able to identify the results with a single digit (iii.1), we preserve only the first 9 of the remaining results.
+    Finally, to be able to mark the results with a single-digit identifier (iii.1) and to not clutter the generation prompt, we only preserve the first 9 of the remaining results.
 \end{enumerate}
 \item \textbf{Evidence, label, and justification generation module}
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
@@ -32,11 +32,11 @@ Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, is a RAG scheme of two 
     \item \textbf{Few-shot examples} of evidence are retrieved for the given claim using BM25~\cite{bm25} on \averitec{} train set. The evidence examples are then appended to the system prompt (iii.1) to make the LLM adhere better to the evidence format used by \averitec{} annotators.
     \item \textbf{Multimodal user message} is composed of the claim text in its first field, and a base64-encoded claim images in its subsequent fields.
     The user message is then passed to the LLM to generate evidence, label and justification.
-    \item Upon \textbf{parsing} the LLM outputs, we augment the LLM-generated evidence which refer an image-related source with a base64-encoded \textit{thumbnail} (ii.1) of the respective source to facilitatate comparison with evidence images chosen by human annotators. 
+    \item Upon \textbf{parsing} the LLM outputs, we augment the LLM-generated evidence which refer an image-related source with a base64-encoded \textit{thumbnail} (ii.1) of the respective image-related source to facilitatate comparison with evidence images chosen by human annotators. 
 \end{enumerate}
 \end{enumerate}
 
-Except for the addition of image-based retrieval module, our system for the \averitec{} shared task is largely the same as our submissions for the AVeriTeC and AVeriTeC 2 shared tasks~\cite{ullrich-etal-2024-aic,ullrich-drchal-2025-aic} and it directly extends on top of our previous work.
+The system extends on top of our previous work on the AVeriTeC and AVeriTeC 2 shared tasks~\cite{ullrich-etal-2024-aic,ullrich-drchal-2025-aic}, with the most notable addition of the image-based retrieval module (ii).
 
 %\subsection{Model and parameter choices}
 %\label{sec:choices}
