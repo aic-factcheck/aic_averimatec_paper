@@ -1,13 +1,7 @@
 %!TEX ROOT=../emnlp2023.tex
 
 \section{Conclusion}
-In this paper, we have introduced our simple yet efficient RAG system which performed competitively well under time and compute constraints in \averitec{} shared task, in May 2025.
-We release the used code along with usage instructions for producing the~\averitec{} submission, vector stores needed for the pipeline to run and their build scripts at 
-\url{https://github.com/heruberuto/FEVER-8-Shared-Task/}
-which is a fork of the \averitec{} baseline repository.
 
-We attribute our success mostly to the use of \textit{document} rather than \textit{sentence} level of retrieval granularity and an employment of a recent LLM at a size which utilizes the whole compute and time budget with only around 10\% time reserve as a failsafe.
-We encourage further usage of our system as a strong and easy-to-setup baseline for further research in automated fact checking and will be happy to answer any questions on the referred contacts.
 
 \subsection{Future works}
 \begin{enumerate}

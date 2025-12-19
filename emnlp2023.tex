@@ -47,7 +47,7 @@
 \usepackage{{booktabs}}
 % Commands
 \newcommand{\todo}[1]{{\color{red}\colorbox{yellow}{\textbf{TODO: }}#1}}
-\newcommand{\averitec}{FEVER~8}
+\newcommand{\averitec}{AVerImaTeC}
 \newcommand{\evr}{Ev\textsuperscript{2}R}
 \newcommand{\supp}{Supported}
 \newcommand{\reff}{Refuted}
@@ -97,7 +97,9 @@ Prague, Czech Republic\\
   \maketitle
 %}
 \begin{abstract}
-In this paper, we present our 3rd place system in the AVerImaTeC shared task, which combines our last year's RAG pipeline with a simple 
+In this paper, we present our 3rd place system in the AVerImaTeC shared task, which combines our last year's retrieval-augmented generation (RAG) pipeline with a simple image similarity based retrieval module.
+
+Despite its simplicity, our system yields competitive performance at just \$0.03 per fact-check using GPT5.1 via OpenAI batch API. 
 
 \end{abstract}
 
@@ -119,7 +121,7 @@ Our pipeline is not meant to be relied upon nor to replace a human fact-checker,
 Our pipeline is an extension of our already existing last year submission all original authors agreed with, including the reusal of the necessary listing in Appendix~\ref{appendix_sec:system2026_prompt}.
 The system was build specifically for the~\averitec~shared task and reflects the biases of its annotators, for more information on this, we suggest the original AVeriTeC paper~\cite{averitec2024}.
 \section*{Acknowledgements}
-We would like to thank our last year system coauthor Tomáš Mlynář for staying in the loop, providing timely insights, proofreads and experience even when direct participation was not within his time budget this year.
+We would like to thank Tomáš Mlynář for providing insights into multi-modal retrieval systems.
 
 This article was created with the state support of the Ministry of Industry and Trade of the Czech Republic, project no. Z220312000000, within the National Recovery Plan Programme.
 The access to the computational infrastructure of the OP VVV funded project CZ.02.1.01/0.0/0.0/16\_019/0000765 ``Research Center for Informatics'' is also gratefully acknowledged.

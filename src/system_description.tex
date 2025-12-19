@@ -3,30 +3,22 @@
 \section{System description}
 \label{sec:system2026}
 
-We adapted a system from~\citealt{ullrich-etal-2024-aic} which extends on top of~\citealt{ullrich-etal-2024-aic}.
+We adapted a system from~\citealt{ullrich-drchal-2025-aic} which extends on top of~\citealt{ullrich-etal-2024-aic}.
 The cited paper describes the system in detail, with ablation studies and justifications of each step.
 Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, consists of precomputation, retrieval, and generation modules:
 
 \begin{enumerate}[label=\roman*.]  % First-level: i., ii., iii.
-\item Precomputation module
+\item Text-based retrieval module
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
-    \item The provided AVeriTeC \textbf{knowledge store} \cite{averitec2024} is split into chunks of specified maximum length, each marked with metadata of its URL and the full texts of the chunk before and after.
-    \item The chunks are then embedded into their vector representations, using only the chunk texts and no metadata.
-    \item Out of all chunk embeddings, a \textbf{vector store} is produced for each claim to be stored as a vector database.
+    \item ~
 \end{enumerate}
-\item Retrieval module
+\item Image-based retrieval module
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
-    \item The \textbf{Claim} is embedded into its vector representation using the same model used in i.2.
-    \item $k$ nearest neighbours are then retrieved from the vector store, along with their \textbf{chunk embeddings}
-    \item The chunk embeddings are then re-ranked using the Maximal Marginal Relevance (MMR) method~\cite{carbonell-mmr}, maximizing the embedding distances between retrieval results while minimizing their distance to the claim.
-    Ultimately, we output a subset of $l$~diverse \textbf{sources} for the claim ($l<k$), augmenting each with its context before, after, and the text of its URL.
+    \item ~
 \end{enumerate}
 \item Evidence \& label generation module
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
-    \item We instruct a Large Language Model (LLM) to produce Question-Answer pairs required to fact-check given claim based on the provided sources, and predict its veracity verdict in a single output. We pass it the texts of all $l$ sources, and several few-shot QA-pair generation examples picked from Averitec train set retrieved using BM25 based on the tested claim. The whole instruction is serialized into a system prompt and the format we used can be seen in Appendix~\ref{appendix_sec:system2026_prompt}.
-    \item \textbf{Claim} is then passed to the LLM as a user message.
-    \item LLM is called to \textbf{generate the evidence} as a Question-Answer-Source triples and the Likert-scale scores for each possible \textbf{veracity verdict} in a single prediction, performing a chain of thought. 
-    \item The LLM output is parsed, and the verdict with the highest score is chosen for the claim.
+    \item ~
 \end{enumerate}
 \end{enumerate}
 
@@ -40,7 +32,3 @@ To produce our submission in the \averitec{} shared task, the following choices 
 \texttt{FAISS}~\cite{douze2024faiss,johnson2019billion} index is used as the vector database engine, due to its simplicity of usage, exact search feature and quick retrieval times (sub-second for a single \averitec{} test claim).
 
 $l=10, k=40, \lambda=0.75$ are the parameters we use for the MMR reranking, meaning that 40 chunks are retrieved, 10 sources are yielded after MMR-diversification, and the tradeoff between their similarity to the claim and their diversity is 3:1 in favour of the source similarity to the claim (explained in more detail in~\citealt{ullrich-etal-2024-aic}). 
-
-\texttt{Ollama} wrapper around \texttt{llama.cpp} is the LLM engine we use to deploy LLMs within the \averitec~test environment due to its robustness and ease of deployment.
-
-\texttt{Qwen3-14b}~\cite{yang2025qwen3technicalreport} is the LLM we use to produce the evidence and labels, we also let it generate its own \texttt{<think>} sequences, although further experimentation (Table~\ref{tab:ablation}) suggests that the thinking tokens may not justify the costs of their prediction, as they seem to perform on par with using only the evidence \& label LLM outputs for its chain of thought.

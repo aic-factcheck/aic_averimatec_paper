@@ -31,27 +31,5 @@
 \label{tab:leaderboard}
 \end{table}
 
-In Table~\ref{tab:leaderboard}, we reprint the final test-leaderboard of \averitec{} shared task as provided by the organizers.
-Our system introduced in Section~\ref{sec:system2026} scores first in the decisive metric for the task -- the new AVeriTeC score -- with a significant margin.
-This came as a surprise to its authors, as neither the values of the old, hu-METEOR-based AVeriTeC score~\cite{averitec2024}, nor the dev-leaderboard available during system development phase (where our system scored 4th), suggested its supremacy.
-Let us therefore proceed with a discussion of possible strengths that could have given our system an edge in verifying the \averitec{} test-set of previously unseen 1000 claims.
+\subsection{Bottlenecks}
 
-\subsection{Why does the system perform well?}
-\label{sec:why}
-So why should our system outperform the \averitec{} baseline and even the other systems submitted to \averitec{} shared task despite the simplicity of its design (Figure~\ref{fig:pipeline2026}) which boils down to a straightforward case of retrieval-augmented generation (RAG)?
-
-The main reason, in our experience, is the large \textbf{context size} we opt for -- while even the \averitec{} baseline processes the claims and sources in a manner more sophisticated than we do, it processes the knowledge store on a \textit{sentence} level, reducing the amount of information passed to the LLM as opposed to working with \textit{documents} as a whole, which is the strategy our system approximates.
-
-Despite our proposed integration of LLM into the pipeline being rather vanilla, combining sources of total length of as much as 60K characters\footnote{In other words, around 33 standard pages. This number follows from our parameter choices in Section~\ref{sec:choices}: 10 sources are retrieved for each claim, each with $\sim2048$ characters of the embedded text, and additional $\sim4096$ characters of context.} on model input yields highly competitive results, leveraging its own trained mechanisms of context processing.
-
-Our other advantages may have been using a very recent model, Qwen3~\cite{yang2025qwen3technicalreport}, which naturally has a slightly higher leakage of 2025 claims into its train set than older models, and outperforms the previous LLM generations at long sequence processing. Furthermore, our pipeline design only uses a single LLM call per claim, meaning we could use the generously-sized 14B variant of Qwen3 and still match the time limit with Nvidia A10 and 23GB VRAM.
-
-\subsection{Scoring change impact}
-\label{sec:score}
-While the new AVeriTeC score based on~\evr-recall~\cite{akhtar2024ev2r} estimates the proportion of correctly fact-checked claims\footnote{Claims with sound evidence w.r.t. human annotation, and an exact match in predicted label.} in all claims, just like the old hu-METEOR-based AVeriTeC score did, their underlying methods differ.
-Most importantly, an LLM-as-a-judge approach is now used instead of symbolic evidence comparison method.
-The rise of our system from 3rd place in AVeriTeC shared task~\cite{schlichtkrull-etal-2024-automated} to 1st place in~\averitec{} without any major system change\footnote{Despite scaling down.} can therefore also be attributed to the used scoring method.
-The old scoring method was, for example, found to be prone to some level of noise, as it was not robust against evidence duplication~\cite{malon-2024-multi}, which was a found exploit to boost evidence recall.
-
-The discrepancy between old and new AVeriTeC score in Table~\ref{tab:leaderboard} could motivate a further study on how the new score behaves, for example using the test-prediction files from last year AVeriTeC shared task systems.
-The familiarity of the systems, the availability of their hu-METEOR scores and documentation, may reveal valuable insights into the \evr{} evaluation method itself, as in which behaviours does it punish and reward.
