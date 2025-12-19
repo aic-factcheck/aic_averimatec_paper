@@ -4,31 +4,46 @@
 \label{sec:system2026}
 
 We adapted a system from~\citealt{ullrich-drchal-2025-aic} which extends on top of~\citealt{ullrich-etal-2024-aic}.
-The cited paper describes the system in detail, with ablation studies and justifications of each step.
-Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, consists of precomputation, retrieval, and generation modules:
+The cited papers describe the system in detail, with ablation studies and justifications of each step.
+Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, is a RAG scheme of two retrievers and one generation module:
 
 \begin{enumerate}[label=\roman*.]  % First-level: i., ii., iii.
-\item Text-based retrieval module
+\item \textbf{Text-based retrieval module}
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
-    \item ~
+    \item \textbf{Vector store} is produced for each of the \averitec{} datapoints in advance, using the scheme introduced in~\citealt{ullrich-etal-2024-aic}: the provided text-only \averitec{} knowledge store is chunked into 2048 character segments, and each is embedded using the \texttt{mxbai-embed-large-v1}~\cite{li-li-2024-aoe,emb2024mxbai} model.
+    \item \textbf{Similarity search} is performed using the exact $k$-NN search implementation provided by the \texttt{FAISS}~\cite{douze2024faiss,johnson2019billion} library, with $k=20$ nearest neighbours
+    \item \textbf{Maximal marginal relevance}~\cite{carbonell-mmr} reranking down to $l=7$ results is then applied to diversify the search results. We set the tradeoff between result diversity and similarity to the claim to $\lambda=0.8$ in favour of similarity to the claim.
 \end{enumerate}
-\item Image-based retrieval module
+\item \textbf{Image-based retrieval module} is invoked separately for each image attached to the \averitec{} claim -- that means, if claim contains $i$ images, $i$ separate sets of results will be produced
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
-    \item ~
+    \item \textbf{Reverse image search (RIS)} is performed using the \texttt{Google Lens}\footnote{\url{https://lens.google.com/}} via Serper API\footnote{\url{https://serper.dev/}} to produce a set of (up to 30) RIS results -- each assigned a webpage URL and a \textit{thumbnail}, which contains an image within this webpage, similar to the given claim image.
+    \item \textbf{Scraping}: each of the RIS results is then scraped, in our case, using the Firecrawl API\footnote{\url{https://firecrawl.dev/}}, which produces a LLM-friendly markdown for each of the URLs. 
+    \item \textbf{Result filtering} -- to maintain the evidence principle~\cite{glockner-etal-2022-missing}, we filter out any evidence published after the claim was originally stated, using the Htmldate~\cite{barbaresi-2020-htmldate} library to estimate the publishment dates for each RIS-retrieved URL.
+    
+    Importantly, many results of RIS we performed in ii.1 were scraping-protected, most notably the Facebook and Instagram posts, resulting in an empty result. For simplicity and compliance with the intended data usage, we filter out these results as well, although we acknowledge that this might lead to a loss of useful information.
+
+    Finally, to be able to identify the results with a single digit (iii.1), we preserve only the first 9 of the remaining results.
 \end{enumerate}
-\item Evidence \& label generation module
+\item \textbf{Evidence, label, and justification generation module}
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
-    \item ~
+    \item \textbf{System prompt} is composed of the results of both the text- (i.) and image-based (ii.) retrievers -- in the prompt, as well as in the pipeline scheme in Figure~\ref{fig:pipeline2026}, we refer to them as to \textbf{text-related sources} and \textbf{image-related sources}, respectively. We instruct the LLM to cite a source with each piece of evidence it produces, assigning the sources numerical \texttt{source ID}s: 1--9 for the text-related sources and 11--19 for the sources related to the 1st claim image, 21--29 for the sources related to the 2nd claim image, etc. 
+    
+    These sources, as well as the task description, formatting instructions and few-shot examples (iii.2) are then serialized into a single system prompt -- its full text can be found in Appendix~\ref{appendix_sec:system2026_prompt}
+    \item \textbf{Few-shot examples} of evidence are retrieved for the given claim using BM25~\cite{bm25} on \averitec{} train set. The evidence examples are then appended to the system prompt (iii.1) to make the LLM adhere better to the evidence format used by \averitec{} annotators.
+    \item \textbf{Multimodal user message} is composed of the claim text in its first field, and a base64-encoded claim images in its subsequent fields.
+    The user message is then passed to the LLM to generate evidence, label and justification.
+    \item Upon \textbf{parsing} the LLM outputs, we augment the LLM-generated evidence which refers an image-related source with a base64-encoded \textit{thumbnail} (ii.1) of the respective image to facilitatate comparison with evidence images chosen by human annotators. 
 \end{enumerate}
 \end{enumerate}
 
-The main differences between this year's AIC \averitec{} system, opposed to last year's AIC AVeriTeC system, are the omission of knowledge store pruning in the precomputation step\footnote{The precomputed vector stores were required to be independent on claim text in \averitec{}.}, and, importantly, the choice of LLM.
-\subsection{Model and parameter choices}
-\label{sec:choices}
-To produce our submission in the \averitec{} shared task, the following choices were made to deploy the pipeline from section~\ref{sec:system2026}:
+Except for the addition of image-based retrieval module, our system for the \averitec{} shared task is largely the same as our submissions for the AVeriTeC and AVeriTeC 2 shared tasks~\cite{ullrich-etal-2024-aic,ullrich-drchal-2025-aic} and it directly extends on top of our previous work.
 
-\texttt{mxbai-embed-large-v1}~\cite{li-li-2024-aoe,emb2024mxbai} is used for the vector embeddings, and the maximum chunk size is set to 2048 characters, considering its input size of 512 tokens and a rule-of-thumb coefficient of 4 characters per token to exploit the full embedding input size and produce the smallest possible vector store size without neglecting a significant proportion of knowledge store text.
-
-\texttt{FAISS}~\cite{douze2024faiss,johnson2019billion} index is used as the vector database engine, due to its simplicity of usage, exact search feature and quick retrieval times (sub-second for a single \averitec{} test claim).
-
-$l=10, k=40, \lambda=0.75$ are the parameters we use for the MMR reranking, meaning that 40 chunks are retrieved, 10 sources are yielded after MMR-diversification, and the tradeoff between their similarity to the claim and their diversity is 3:1 in favour of the source similarity to the claim (explained in more detail in~\citealt{ullrich-etal-2024-aic}). 
+%\subsection{Model and parameter choices}
+%\label{sec:choices}
+%To produce our submission in the \averitec{} shared task, the following choices were made to deploy the pipeline %from section~\ref{sec:system2026}:
+%
+%\texttt{mxbai-embed-large-v1}~\cite{li-li-2024-aoe,emb2024mxbai} is used for the vector embeddings, and the %maximum chunk size is set to 2048 characters, considering its input size of 512 tokens and a rule-of-thumb %coefficient of 4 characters per token to exploit the full embedding input size and produce the smallest possible %vector store size without neglecting a significant proportion of knowledge store text.
+%
+%\texttt{FAISS}~\cite{douze2024faiss,johnson2019billion} index is used as the vector database engine, due to its %simplicity of usage, exact search feature and quick retrieval times (sub-second for a single \averitec{} test %claim).
+%
+%$l=10, k=40, \lambda=0.75$ are the parameters we use for the MMR reranking, meaning that 40 chunks are retrieved, %10 sources are yielded after MMR-diversification, and the tradeoff between their similarity to the claim and %their diversity is 3:1 in favour of the source similarity to the claim (explained in more detail in~\citealt%{ullrich-etal-2024-aic}). 

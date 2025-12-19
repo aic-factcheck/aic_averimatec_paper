@@ -4,7 +4,9 @@
 
 
 \section{Introduction}
-TODO: averitec 2024 proved that factchecking can be done on long text with proprietary blackbox llms averitec 2 2025 showed that it can also be solved using open-weights models on reasonable resources, this year, we tackle~\cite{cao2025averimatecdatasetautomaticverification} a problem of image-text misinformation.
+TODO: averitec 2024 proved that factchecking can be done on long text with proprietary blackbox llms averitec 2 2025 showed that it can also be solved using open-weights models on reasonable resources, this year's AVerImaTeC shared task~\cite{cao2025averimatecdatasetautomaticverification} extends the challenge to its multimodal settings, providing .
+
+We have scored 3rd place with a simple pipeline that performs RAG with two retrieval modules, one retrieving offline knowledge store evidence based on textual similarity, other retrieving texts published alongside a similar image using a blackbox reverse image search model -- Google Lens, in our case.
 
 %\vspace{-.5em}
 \begin{minipage}{\linewidth}
@@ -16,4 +18,3 @@ TODO: averitec 2024 proved that factchecking can be done on long text with propr
 \vspace{1em}
 \end{minipage}
 
-We have scored 3rd place with a simple AF pipeline that performs RAG with two retrieval moduls, one retrieving offline knowledge store evidence based on textual similarity, other retrieving texts published alongside a similar image using a blackbox reverse image search model -- Google Lens, in our case.

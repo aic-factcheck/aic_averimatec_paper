@@ -98,10 +98,9 @@ Prague, Czech Republic\\
 %}
 \begin{abstract}
 In this paper, we present our 3rd place system in the AVerImaTeC shared task, which combines our last year's retrieval-augmented generation (RAG) pipeline with a simple image similarity based retrieval module.
-
-Despite its simplicity, our system yields competitive performance at just \$0.03 per fact-check using GPT5.1 via OpenAI batch API.
-Our system is also easy to reproduce, as it only consists of two straightforward retrievers and a promnpt for evidence and label generation, which is why we suggest it as an accesible starting point for further experimentation.
-We publish the code\footnote{\url{https://github.com/heruberuto/AVerImaTec\_Shared\_Task}} and prompts, as well as our vector stores and insights into the scheme's running costs and directions for further improvement.
+Despite its simplicity, our system delivers competitive performance with a single MLLM call per fact-check at just \$0.03 on average using GPT5.1 via OpenAI batch API.
+Our system is also easy to reproduce, consisting of only two straightforward retrievers and a prompt for evidence, label, and justification generation, which is why we suggest it as an accesible starting point for further experimentation.
+We publish its code\footnote{\url{https://github.com/heruberuto/AVerImaTec\_Shared\_Task}} and prompts, as well as our vector stores and insights into the scheme's running costs and directions for further improvement.
 
 \end{abstract}
 
@@ -117,11 +116,12 @@ We publish the code\footnote{\url{https://github.com/heruberuto/AVerImaTec\_Shar
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Limitations}
-Our pipeline is not meant to be relied upon nor to replace a human fact-checker, but rather to assist an informed user. It gives sources and proposed labels for further questioning. It is optimized only for English, the carbon costs of the used models are considerable, despite the system trying to cut down the environmental cost of the prediction step.
+Our pipeline is not meant to be relied upon nor to replace a human fact-checker, but rather to assist an informed user. It gives sources for both the textual and image-text evidence and proposes labels for further questioning. Further hallucination could be spotted within the generated justification, however, the system is not meant to be used as an oracle. The current prompting and text-retrieval model assume English input, and the MLLM-backbone used for the shared task (although interchangeable) is GPT5.1, which is a black box model with limited reproducibility and considerable carbon costs. 
+Refuted class is massively overrepresented in the \averitec{} dataset (95\% of train-claims and 78\% of text-claims), making the accuracy-based \averitec{} score computed over \averitec{} test set a problematic metric for systems used in the wild.
 
 \section*{Ethics statement}
-Our pipeline is an extension of our already existing last year submission all original authors agreed with, including the reusal of the necessary listing in Appendix~\ref{appendix_sec:system2026_prompt}.
-The system was build specifically for the~\averitec~shared task and reflects the biases of its annotators, for more information on this, we suggest the original AVeriTeC paper~\cite{averitec2024}.
+Our pipeline is an extension of our already existing last year submission all original authors agreed with.
+The system was build specifically for the~\averitec~shared task and reflects the biases of its annotators, for more information on this, we suggest the original \averitec{} paper~\cite{cao2025averimatecdatasetautomaticverification}.
 \section*{Acknowledgements}
 We would like to thank Tomáš Mlynář for providing insights into multi-modal retrieval systems.
 
