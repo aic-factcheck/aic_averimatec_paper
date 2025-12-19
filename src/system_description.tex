@@ -14,13 +14,13 @@ Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, is a RAG scheme of two 
     \item \textbf{Similarity search} is performed using the exact $k$-NN search implementation provided by the \texttt{FAISS}~\cite{douze2024faiss,johnson2019billion} library, with $k=20$ nearest neighbours
     \item \textbf{Maximal marginal relevance}~\cite{carbonell-mmr} reranking down to $l=7$ results is then applied to diversify the search results. We set the tradeoff between result diversity and similarity to the claim to $\lambda=0.8$ in favour of similarity to the claim.
 \end{enumerate}
-\item \textbf{Image-based retrieval module} is invoked separately for each image attached to the \averitec{} claim -- that means, if claim contains $i$ images, $i$ separate sets of results will be produced
+\item \textbf{Image-based retrieval module} is invoked separately for each image attached to the \averitec{} claim -- that means, if claim contains $n$ images, $n$ separate sets of results will be produced
 \begin{enumerate}[label=\arabic*.]  % Second-level: 1., 2., 3.
     \item \textbf{Reverse image search (RIS)} is performed using the \texttt{Google Lens}\footnote{\url{https://lens.google.com/}} via Serper API\footnote{\url{https://serper.dev/}} to produce a set of (up to 30) RIS results -- each assigned a webpage URL and a \textit{thumbnail}, which contains an image within this webpage, similar to the given claim image.
     \item \textbf{Scraping}: each of the RIS results is then scraped, in our case, using the Firecrawl API\footnote{\url{https://firecrawl.dev/}}, which produces a LLM-friendly markdown for each of the URLs. 
     \item \textbf{Result filtering} -- to maintain the evidence principle~\cite{glockner-etal-2022-missing}, we filter out any evidence published after the claim was originally stated, using the Htmldate~\cite{barbaresi-2020-htmldate} library to estimate the publishment dates for each RIS-retrieved URL.
     
-    Importantly, many results of RIS we performed in ii.1 were scraping-protected, most notably the Facebook and Instagram posts, resulting in an empty result. For simplicity and compliance with the intended data usage, we filter out these results as well, although we acknowledge that this might lead to a loss of useful information.
+    Importantly, many results of RIS we performed in ii.1 were scraping-protected, most notably the Facebook and Instagram posts, resulting in an empty result. For simplicity and compliance with fair data usage, we toss these results as well, although we acknowledge that this might lead to a loss of useful information.
 
     Finally, to be able to identify the results with a single digit (iii.1), we preserve only the first 9 of the remaining results.
 \end{enumerate}
@@ -32,7 +32,7 @@ Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, is a RAG scheme of two 
     \item \textbf{Few-shot examples} of evidence are retrieved for the given claim using BM25~\cite{bm25} on \averitec{} train set. The evidence examples are then appended to the system prompt (iii.1) to make the LLM adhere better to the evidence format used by \averitec{} annotators.
     \item \textbf{Multimodal user message} is composed of the claim text in its first field, and a base64-encoded claim images in its subsequent fields.
     The user message is then passed to the LLM to generate evidence, label and justification.
-    \item Upon \textbf{parsing} the LLM outputs, we augment the LLM-generated evidence which refers an image-related source with a base64-encoded \textit{thumbnail} (ii.1) of the respective image to facilitatate comparison with evidence images chosen by human annotators. 
+    \item Upon \textbf{parsing} the LLM outputs, we augment the LLM-generated evidence which refer an image-related source with a base64-encoded \textit{thumbnail} (ii.1) of the respective source to facilitatate comparison with evidence images chosen by human annotators. 
 \end{enumerate}
 \end{enumerate}
 
