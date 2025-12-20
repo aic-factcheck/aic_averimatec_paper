@@ -39,6 +39,26 @@ To reveal directions for future improvements, we proceed to study what its main 
 
 
 \subsection{Bottlenecks}
+\begin{table}[h]
+\centering
+\begin{tabular}{l
+>{\centering\arraybackslash}p{.7cm} 
+>{\centering\arraybackslash}p{.7cm} 
+>{\centering\arraybackslash}p{.7cm} 
+>{\centering\arraybackslash}p{.7cm}}
+{\small{\textbf{Evidence format}}} &
+\rotatebox{70}{\textbf{\footnotesize{Question Score}}} &
+\rotatebox{70}{\textbf{\footnotesize{Evidence Score}}} &
+\rotatebox{70}{\textbf{\footnotesize{Verdict Accuracy}}} &
+\rotatebox{70}{\textbf{\footnotesize{Justification Score}}} \\
+\hline
+{\small{Answer only}}   & \textbf{0.86} & 0.27 & 0.31 & 0.28 \\
+{\textit{\small{Question + Answer}}}   & \textit{0.84} & \textit{0.33} & \textit{\textbf{0.39}} & \textit{0.31} \\
+{\small{Declarative evidence}}   & 0.82 & \textbf{0.35} & 0.38 & \textbf{0.32} \\
+\end{tabular}
+\caption{Ablation study tweaking the evidence generation format from section~\ref{sec:system2026}, iii. Scheme used in final submission is in italics.}
+\label{tab:ablation}
+\end{table}
 
 \subsection{Cost analysis}
 The scheme from section~\ref{sec:system2026} uses a single RIS request per claim image (one claim may feature multiple images, but the vast majority features exactly 1 image in \averitec{}) -- using Serper, this search comes at a cost of 3 credits, totalling at \$0.003 using the least-discounted bulk pricing (\$50 for 50K Serper credits).
