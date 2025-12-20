@@ -4,6 +4,7 @@
 
 
 \subsection{Future works}
+\label{sec:future}
 \begin{enumerate}
     \item Integrate an agentic "should image-based evidence be retrieved?" approach into the pipeline to see if it raises the score
     \item The used RIS engine (Google Lens) was a clear bottleneck, often providing 0 results for claims from more distant past (e.g. 2022 for dev set), or for claim images with explicit graphical content -- this should be addressed in future works, possibly swapping the RIS provider for a more robust one, as even a sub-optimal or explicit search result may be valuable for fact-checking and is better facilitated by the RAG strategy than an empty result.

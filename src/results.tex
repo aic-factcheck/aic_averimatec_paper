@@ -31,12 +31,20 @@
 \label{tab:leaderboard}
 \end{table}
 
-The final \averitec{} leaderboard is shown in table~\ref{tab:leaderboard}. Our system achieves a combined verdict score\footnote{Proportion of claims with a correct verdict \textit{and} an evidence score of at least 0.3 at the same time, see~\cite{cao2025averimatecdatasetautomaticverification}.} of 0.35, with a near-sota question score of 0.81, mean evidence score of 0.35, and a justification score of 0.3.
+The final \averitec{} leaderboard is shown in table~\ref{tab:leaderboard}. Our system achieves a combined verdict score\footnote{Proportion of claims with a correct verdict \textit{and} an evidence score of at least 0.3 at the same time, see~\citealt{cao2025averimatecdatasetautomaticverification}.} of 0.35, with a near-sota question score of 0.81, mean evidence score of 0.35, and a justification score of 0.3.
 Metrics are based on Ev2R~\cite{akhtar2024ev2r} recall scores with LLM as a judge.
 
-While our system does not reach the very state of the art, it outperforms the baseline and majority of other systems across the board, scoring a solid 3rd place.
+While our system does not reach the very state of the art, it outperforms the iterative agentic baseline~\cite{cao2025averimatecdatasetautomaticverification} and majority of other systems across the board, scoring a solid 3rd place.
 To reveal directions for future improvements, we proceed to study what its main pain-points are using the leaderboard metrics and our own reproductions of \averitec{} dev-split metrics.
 
 
 \subsection{Bottlenecks}
 
+\subsection{Cost analysis}
+The scheme from section~\ref{sec:system2026} uses a single RIS request per claim image (one claim may feature multiple images, but the vast majority features exactly 1 image in \averitec{}) -- using Serper, this search comes at a cost of 3 credits, totalling at \$0.003 using the least-discounted bulk pricing (\$50 for 50K Serper credits).
+
+The markdown scraping was performed using the Firecrawl API, which at its hobby tier charges \$0.006 per scraped page, with 20,000 free scraping tasks for education emails -- in the worst case scenario of multiple claim images in a single claim, each with full 9 RIS results older than the claim date that can be scraped\footnote{Which is not usually the case, as at least some proportion of results typically come from Meta's scraping-protected social media} and no discount, this amounts to \$0.05 per image.
+To avoid this cost, however,  we suggest using a free scraper instead, such as the Trafilatura library which was used to produce the \averitec{} offline knowledge stores and our system does not show any noticeable problems ingesting its outputs.
+
+The Generation module LLM results were computed using the OpenAI Batch API, with GPT-5.1 as the backbone model.
+On average, 11K completion input tokens were given to the model and 1150 tokens of output were generated per \averitec{} claim using our system from section~\ref{sec:system2026}, at an average cost of \$0.013 per claim.
