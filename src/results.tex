@@ -31,14 +31,15 @@
 \label{tab:leaderboard}
 \end{table}
 
-The final \averitec{} leaderboard is shown in table~\ref{tab:leaderboard}. Our system achieves a combined verdict score\footnote{Proportion of claims with a correct verdict \textit{and} an evidence score of at least 0.3 at the same time, see~\citealt{cao2025averimatecdatasetautomaticverification}.} of 0.35, with a near-sota question score of 0.81, mean evidence score of 0.35, and a justification score of 0.3.
+The final \averitec{} leaderboard is shown in table~\ref{tab:leaderboard}. Our system achieves a combined verdict score\footnote{Proportion of claims with a correct verdict \textit{and} an evidence score of at least 0.3 at the same time, see~\citealt{cao2025averimatecdatasetautomaticverification}.} of 0.35, with a near-SOTA question score of 0.81, mean evidence score of 0.35, and a justification score of 0.3.
 Metrics are based on Ev2R~\cite{akhtar2024ev2r} recall scores with LLM as a judge.
 
-While our system does not reach the very state of the art, it outperforms the iterative agentic baseline~\cite{cao2025averimatecdatasetautomaticverification} and majority of other systems across the board, scoring a solid 3rd place.
-To reveal directions for future improvements, we proceed to study what its main pain-points are using the leaderboard metrics and our own reproductions of \averitec{} dev-split metrics.
+While our system does not reach the very state of the art, it significantly outperforms the iterative agentic baseline~\cite{cao2025averimatecdatasetautomaticverification} and majority of other systems across the board, scoring a solid 3rd place.
+To reveal directions for future improvements, we proceed to study what its main pitfalls are using the leaderboard metrics and our own reproductions of \averitec{} dev-split metrics.
 
 
 \subsection{Bottlenecks}
+\label{sec:bottlenecks}
 \begin{table}[h]
 \centering
 \begin{tabular}{l
@@ -59,6 +60,19 @@ To reveal directions for future improvements, we proceed to study what its main 
 \caption{Ablation study tweaking the evidence generation format from section~\ref{sec:system2026}, iii. Scheme used in final submission is in italics.}
 \label{tab:ablation}
 \end{table}
+
+Looking at our standing in the leaderboard from table~\ref{tab:leaderboard}, the main bottleneck appears to be our system's \textit{evidence score}, computed using Ev2R recall. Despite the question score shows promising 81\% our lack in evidence score then propagates further to the verdict and justification scores as well.
+Part of this problem could be attributed to our system's legacy evidence format geared more towards AVeriTeC 1 and 2 shared tasks -- an \textit{evidence} is generated as a QA pair, of a question fact-checker would ask themselves during the task, and an answer they would arrive to, grounded in an URL-referred source, whereas in \averitec{} evaluation scheme, the evidence is a self-contained declarative sentence with pointers to relevant images.
+
+Table~\ref{tab:ablation} lists three approaches we took to address this discrepancy -- in our first approach, we disregarded this entirely and only listed the generated answers as the \averitec{} evidence, in our second approach -- which is also the one we have submitted to the final leaderboard (table~\ref{tab:leaderboard}) -- we have concatenated the question and answer together to obtain each evidence string, appending a \texttt{[IMG\_1]} tag and a base64-encoded image in metadata where an image-related source was used. 
+
+To see whether this can be improved upon, we have also experimentally implemented a 3rd approach, referred to as \say{declarative evidence} in table~\ref{tab:ablation}, in which we have directly prompted the LLM to generate a self-contained declarative evidence text with pointers to used images.
+Although this approach was experimental and not free of its own glitches (resulting in a malformed image pointers and \texttt{[IMG\_1]} tag being erroneously used in other generic fields, such as justification and questions), it shows promissing results, surpassing our \textit{Question+Answer} approach by encouraging 2\% in the evidence score, even before adjusting its prompt to iron out the glitches.
+
+Another bottleneck could be possible discrepancies in our image-evidence usage -- looking closer at the ablation study in table~\ref{tab:ablation}, the \say{Answer only} approach stays too close behind its more advanced alternatives.
+This finding raises concerns, since the answer-only approach does not use \textit{any} \texttt{[IMG\_1]} tags, yet per~\citealt{cao2025averimatecdatasetautomaticverification}, 53.9\% of the \averitec{} evidence should be annotated using reverse image search, with 1.6\% using the image itself as the answer. 
+This is to be investigated in future works, as even a small discrepancy in the way our system presents its image sources and how the \averitec{} evaluator assumes to receive them may have a tremendous impact on the final score.
+
 
 \subsection{Cost analysis}
 The scheme from section~\ref{sec:system2026} uses a single RIS request per claim image (one claim may feature multiple images, but the vast majority features exactly 1 image in \averitec{}) -- using Serper, this search comes at a cost of 3 credits, totalling at \$0.003 using the least-discounted bulk pricing (\$50 for 50K Serper credits).

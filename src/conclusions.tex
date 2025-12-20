@@ -1,11 +1,16 @@
 %!TEX ROOT=../emnlp2023.tex
 
 \section{Conclusion}
+Using a well established foundational fact-checking framework from~\cite{ullrich-etal-2024-aic,ullrich-drchal-2025-aic}, we introduce a new pipeline for image-text fact-checking, using a dual-retrieval multimodal RAG system.
+The two retrieval modules our system uses are a text-based similarity search and a reverse image search (RIS) accessed through API.
 
-
+Our system scores 3rd place in the \averitec{} shared task, with a combined verdict score of 0.35, a question score of 0.81, an evidence score of 0.35, and a justification score of 0.3, outperforming the baseline across the board.
+With this paper, we publish a detailed description of our system design, code and prompts we used, as well as insights into the costs of its deployment and possible points of failure.
 \subsection{Future works}
 \label{sec:future}
 \begin{enumerate}
-    \item Integrate an agentic "should image-based evidence be retrieved?" approach into the pipeline to see if it raises the score
-    \item The used RIS engine (Google Lens) was a clear bottleneck, often providing 0 results for claims from more distant past (e.g. 2022 for dev set), or for claim images with explicit graphical content -- this should be addressed in future works, possibly swapping the RIS provider for a more robust one, as even a sub-optimal or explicit search result may be valuable for fact-checking and is better facilitated by the RAG strategy than an empty result.
+    \item During our exploratory analysis, we have witnessed many pitfalls of the used RIS engine (Google Lens) -- often providing 0 results for claims from more distant past (e.g. 2022 for dev set), or for claim images with explicit graphical content -- this should be addressed in future works, possibly swapping the RIS provider for a more robust one, as even a sub-optimal or explicit search result may be valuable for fact-checking and is better facilitated by the RAG strategy than an empty result.
+    \item The occassional absence of RIS results, as well as the fact that not all gold evidence features an image reference, provokes a further study of agentic extension of our pipeline from figure~\ref{fig:pipeline2026} -- a LLM agent could first decide whether it wants to use RIS, text-retrieval or both. The pipeline used to produce the final evidence would then be adjusted to the agent's choice.
+    While the performance gain may be questionable, this would be a reliable way to save waste of resources (RIS and scraping requests).
+    \item Our findings in section~\ref{sec:bottlenecks} suggest possible discrepancies between how our system produces the image-text evidence and how the \averitec{} evaluator assumes to receive them -- this should be further looked into for a further score bump on this specific benchmark (and the future shared tasks that may derive from it)
 \end{enumerate}
