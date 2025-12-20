@@ -27,9 +27,16 @@
 \hline
 {\small{Baseline}}      & 0.55 & 0.17 & 0.11 & 0.13 \\
 \end{tabular}
-\caption{System leaderboard showing performance metrics. Our system described in section~\ref{sec:system2026} is highlighted with \textit{italics}.}
+\caption{System leaderboard showing performance metrics on \averitec{} test-split. Our system described in section~\ref{sec:system2026} is highlighted with \textit{italics}.}
 \label{tab:leaderboard}
 \end{table}
+
+The final \averitec{} leaderboard is shown in table~\ref{tab:leaderboard}. Our system achieves a combined verdict score\footnote{Proportion of claims with a correct verdict \textit{and} an evidence score of at least 0.3 at the same time, see~\cite{cao2025averimatecdatasetautomaticverification}.} of 0.35, with a near-sota question score of 0.81, mean evidence score of 0.35, and a justification score of 0.3.
+Metrics are based on Ev2R~\cite{akhtar2024ev2r} recall scores with LLM as a judge.
+
+While our system does not reach the very state of the art, it outperforms the baseline and majority of other systems across the board, scoring a solid 3rd place.
+To reveal directions for future improvements, we proceed to study what its main pain-points are using the leaderboard metrics and our own reproductions of \averitec{} dev-split metrics.
+
 
 \subsection{Bottlenecks}
 

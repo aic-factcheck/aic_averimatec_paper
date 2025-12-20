@@ -8,7 +8,7 @@ The challenge of automated fact verification has been studied extensively in pre
 With public discourse moving increasingly to social media, the task fact-checkers face, however, often goes beyond just text and language.
 An important example of this phenomenon are the image-text claims, whose veracity depends not only on the textual statement itself, but also on the contents of images that come with it, whether they are authentic or edited, and whether the images are presented in the right context.
 
-To facilitate the automation of this type of fact-checking~\citealt{cao2025averimatecdatasetautomaticverification} publishes \averitec{} dataset, collecting hundreds of reference image-text factchecks from human annotators, announcing the \averitec{} shared task to establish its state of the art.
+To facilitate the automation of this type of fact-checking,~\citealt{cao2025averimatecdatasetautomaticverification} publishes the \averitec{} dataset, collecting hundreds of reference image-text factchecks from human annotators, announcing the \averitec{} shared task late 2025, to establish its state of the art.
 
 %\vspace{-.5em}
 \begin{minipage}{\linewidth}
@@ -21,6 +21,6 @@ To facilitate the automation of this type of fact-checking~\citealt{cao2025averi
 \end{minipage}
 
 
-With this paper, we introduce our 3rd place \averitec{} shared-task system which aims to give a strong baseline for image-text fact checking using easy-to-reproduce modules and affordable running costs, using a single query to multimodal LLM per claim and a single RIS request for each image attached to it.
+With this paper, we introduce our 3rd place \averitec{} shared-task system which aims to give a strong baseline for image-text fact checking using easy-to-reproduce modules and affordable running costs, with a single query to multimodal LLM per claim and a single RIS request for each image attached to it.
 Our pipeline performs RAG with two retrieval modules, one retrieving relevant documents from offline knowledge using vector search, other retrieving documents that better contextualize the claim images using RIS -- Google Lens, in our case.
 Our system is visualised in figure~\ref{fig:pipeline2026} and detailed in section~\ref{sec:system2026}.

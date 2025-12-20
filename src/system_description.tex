@@ -33,6 +33,9 @@ Our pipeline, depicted in Figure~\ref{fig:pipeline2026}, is a RAG scheme of two 
     \item \textbf{Multimodal user message} is composed of the claim text in its first field, and a base64-encoded claim images in its subsequent fields.
     The user message is then passed to the LLM to generate evidence, label and justification.
     \item Upon \textbf{parsing} the LLM outputs, we augment the LLM-generated evidence which refer an image-related source with a base64-encoded \textit{thumbnail} (ii.1) of the respective image-related source to facilitatate comparison with evidence images chosen by human annotators. 
+    \item \textbf{\averitec{} format matching} -- as in previous years, our system outputs the evidence formatted as QA pairs. In \averitec{}, however, this format is phased out -- while the questions are evaluated separately, the main score (see table~\ref{tab:leaderboard}) is based on comparing two self-contained \say{evidence texts}, typically containing all the information within a single declarative sentence with pointers to relevant images.
+
+    To match this design without introducing another LLM request, we concatenate the question and answer to obtain a self-contained evidence text for each QA pair. If an image source was referred, we append \texttt{[IMG\_1]}, referring source thumbnail, to this evidence text.
 \end{enumerate}
 \end{enumerate}
 
