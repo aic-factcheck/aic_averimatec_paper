@@ -20,7 +20,6 @@ To facilitate the automation of this type of fact-checking,~\citealt{cao2025aver
 \vspace{1em}
 \end{minipage}
 
-
-With this paper, we introduce our 3rd place \averitec{} shared-task system which aims to give a strong baseline for image-text fact checking using easy-to-reproduce modules and affordable running costs, with a single query to multimodal LLM per claim and a single RIS request for each image attached to it.
-Our pipeline performs RAG with two retrieval modules, one retrieving relevant documents from offline knowledge using vector search, other retrieving documents that better contextualize the claim images using RIS -- Google Lens, in our case.
+With this paper, we introduce our 3rd place \averitec{} shared-task system, aiming to provide a strong baseline for image-text fact checking with easy-to-reimplement modules and affordable running costs. We use a single query to a multimodal LLM per claim and a single RIS request for each attached image.
+Our pipeline performs retrieval-augmented generation (RAG)~\cite{rag} with two retrieval modules: one retrieves relevant documents from offline knowledge using vector search, and the other retrieves documents that contextualize the claim images using RIS (Google Lens in our case).
 Our system is visualised in figure~\ref{fig:pipeline2026} and detailed in section~\ref{sec:system2026}.
